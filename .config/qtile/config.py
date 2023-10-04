@@ -26,6 +26,8 @@
 
 from libqtile import bar, layout, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
+from libqtile.lazy import lazy
+from libqtile.utils import guess_terminal
 
 ######################
 # ===== COLORS ===== #
@@ -44,12 +46,20 @@ DoomOne = {
 
 colors = DoomOne
 
-mod = "mod4"
-terminal = guess_terminal()
+#########################
+# ===== CONSTANTS ===== #
+#########################
 
+mod = "mod4"
+alt = "mod1"
+terminal = guess_terminal()
+code_editor = "code"
+
+# A list of available commands that can be bound to keys can be found
+# at https://docs.qtile.org/en/latest/manual/config/lazy.html
 keys = [
-    # A list of available commands that can be bound to keys can be found
-    # at https://docs.qtile.org/en/latest/manual/config/lazy.html
+    # The essentials
+    Key([mod, alt], "c", lazy.spawn(code_editor), desc="Launch code editor"),
     # Switch between windows
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
@@ -183,8 +193,8 @@ screens = [
                     },
                     name_transform=lambda name: name.upper(),
                 ),
-                widget.TextBox("default config", name="default"),
-                widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
+                # widget.TextBox("default config", name="default"),
+                # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
                 # widget.StatusNotifier(),
                 widget.Systray(),

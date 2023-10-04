@@ -12,9 +12,10 @@ function run {
 }
 
 run picom -CGb &
-run nitrogen --restore & 
+run nitrogen --restore &
+run compton &
 run /usr/lib/polkit-kde-authentication-agent-1 &
-run megasync
-run xfce4-clipman
-run gammy
-run dunst
+run megasync &
+run xfce4-clipman &
+run gammy & 
+run dunst &
