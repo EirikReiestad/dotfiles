@@ -1,33 +1,10 @@
-# Copyright (c) 2010 Aldo Cortesi
-# Copyright (c) 2010, 2014 dequis
-# Copyright (c) 2012 Randall Ma
-# Copyright (c) 2012-2014 Tycho Andersen
-# Copyright (c) 2012 Craig Barnes
-# Copyright (c) 2013 horsik
-# Copyright (c) 2013 Tao Sauvage
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
-from libqtile import bar, layout, widget
+import os
+import subprocess
+from libqtile import bar, layout, widget, hook, qtile
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
+from libqtile.widget import backlight
 
 ######################
 # ===== COLORS ===== #
@@ -44,7 +21,18 @@ DoomOne = {
     "color06": "#c678dd",
 }
 
-colors = DoomOne
+CUSTOM = {
+    "bg": "#282c34",
+    "fg": "#bbc2cf",
+    "color01": "#1c1f24",
+    "color02": "#ff6c6b",
+    "color03": "#98be65",
+    "color04": "#da8548",
+    "color05": "#51afef",
+    "color06": "#c678dd",
+}
+
+colors = CUSTOM
 
 #########################
 # ===== CONSTANTS ===== #
@@ -54,12 +42,24 @@ mod = "mod4"
 alt = "mod1"
 terminal = guess_terminal()
 code_editor = "code"
+default_browser = "microsoft-edge"
+
+# ----------------------------------------
+# Define bar
+# ----------------------------------------
+wm_bar = "polybar"
+# wm_bar = "qtile"
+
+####################
+# ===== KEYS ===== #
+####################
 
 # A list of available commands that can be bound to keys can be found
 # at https://docs.qtile.org/en/latest/manual/config/lazy.html
 keys = [
     # The essentials
     Key([mod, alt], "c", lazy.spawn(code_editor), desc="Launch code editor"),
+    Key([mod, alt], "b", lazy.spawn(default_browser), desc="Launch default browser"),
     # Switch between windows
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
@@ -117,6 +117,12 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
+    # Switch focus of monitors
+    Key([mod], "period", lazy.screen.next_group(), desc="Move focus to next monitor"),
+    Key([mod], "comma", lazy.screen.prev_group(), desc="Move focus to prev monitor"),
+    # backlight controls
+    # Key([], "XF86MonBrightnessUp", lazy.spawn("brightness up")),
+    # Key([], "XF86MonBrightnessDown", lazy.spawn("brightness down")),
 ]
 
 groups = [Group(i) for i in "123456789"]
@@ -152,7 +158,7 @@ for i in groups:
 layout_theme = {
     "border_width": 3,
     "margin": 15,
-    "border_focus": colors.get("color06", "#ff0000"),
+    "border_focus": colors.get("color03", "#ff0000"),
     "border_normal": colors.get("bg", "#1D2330"),
 }
 
@@ -172,6 +178,14 @@ layouts = [
     # layout.Zoomy(),
 ]
 
+#######################
+# ===== WIDGETS ===== #
+#######################
+
+# ----------------------------------------
+# Setup Widget Defaults
+# ----------------------------------------
+
 widget_defaults = dict(
     font="sans",
     fontsize=12,
@@ -179,38 +193,48 @@ widget_defaults = dict(
 )
 extension_defaults = widget_defaults.copy()
 
-screens = [
-    Screen(
-        top=bar.Bar(
-            [
-                widget.CurrentLayout(),
-                widget.GroupBox(),
-                widget.Prompt(),
-                widget.WindowName(),
-                widget.Chord(
-                    chords_colors={
-                        "launch": ("#ff0000", "#ffffff"),
-                    },
-                    name_transform=lambda name: name.upper(),
-                ),
-                # widget.TextBox("default config", name="default"),
-                # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
-                # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-                # widget.StatusNotifier(),
-                widget.Systray(),
-                widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                widget.QuickExit(),
-            ],
-            24,
-            # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
-            # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
-        ),
-        # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
-        # By default we handle these events delayed to already improve performance, however your system might still be struggling
-        # This variable is set to None (no cap) by default, but you can set it to 60 to indicate that you limit it to 60 events per second
-        # x11_drag_polling_rate = 60,
+# ----------------------------------------
+# Widgets
+# ----------------------------------------
+
+widget_list = [
+    widget.CurrentLayout(),
+    widget.GroupBox(),
+    widget.Prompt(),
+    widget.WindowName(),
+    widget.Chord(
+        chords_colors={
+            "launch": ("#ff0000", "#ffffff"),
+        },
+        name_transform=lambda name: name.upper(),
     ),
+    # widget.TextBox("default config", name="default"),
+    # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
+    # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
+    # widget.StatusNotifier(),
+    widget.Systray(),
+    widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
+    widget.QuickExit(),
 ]
+
+#######################
+# ===== SCREENS ===== #
+#######################
+
+if wm_bar == "polybar":
+    screens = [Screen(top=bar.Gap(size=28))]
+else:
+    screens = [
+        Screen(
+            top=bar.Bar(
+                widget_list,
+                24,
+                opacity=0.6,
+                border_width=[3, 0, 3, 0],
+                margin=[0, 0, 0, 0],
+            ),
+        ),
+    ]
 
 # Drag floating layouts.
 mouse = [
@@ -254,6 +278,13 @@ auto_minimize = True
 
 # When using the Wayland backend, this can be used to configure input devices.
 wl_input_rules = None
+
+
+@hook.subscribe.startup_once
+def start_once():
+    home = os.path.expanduser("~")
+    subprocess.call([home + "/.config/qtile/scripts/autostart.sh"])
+
 
 # XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
 # string besides java UI toolkits; you can see several discussions on the

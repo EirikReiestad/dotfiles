@@ -11,11 +11,15 @@ function run {
     fi
 }
 
+# Load picom
 run picom -CGb &
+# Load background
 run nitrogen --restore &
-run compton &
-run /usr/lib/polkit-kde-authentication-agent-1 &
-run megasync &
-run xfce4-clipman &
-run gammy & 
-run dunst &
+# Launch polybar
+~/.config/polybar/launch.sh &
+# run compton &
+# run /usr/lib/polkit-kde-authentication-agent-1 &
+# run megasync &
+# run xfce4-clipman &
+# run gammy & 
+# run dunst &

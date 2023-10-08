@@ -24,10 +24,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from libqtile import bar, layout, widget
+import os
+import subprocess
+from libqtile import bar, layout, widget, hook, qtile
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
+from libqtile.widget import backlight
 
 ######################
 # ===== COLORS ===== #
@@ -44,7 +47,18 @@ DoomOne = {
     "color06": "#c678dd",
 }
 
-colors = DoomOne
+CUSTOM = {
+    "bg": "#282c34",
+    "fg": "#bbc2cf",
+    "color01": "#1c1f24",
+    "color02": "#ff6c6b",
+    "color03": "#98be65",
+    "color04": "#da8548",
+    "color05": "#51afef",
+    "color06": "#c678dd",
+}
+
+colors = CUSTOM 
 
 #########################
 # ===== CONSTANTS ===== #
@@ -54,12 +68,14 @@ mod = "mod4"
 alt = "mod1"
 terminal = guess_terminal()
 code_editor = "code"
+default_browser = "microsoft-edge"
 
 # A list of available commands that can be bound to keys can be found
 # at https://docs.qtile.org/en/latest/manual/config/lazy.html
 keys = [
     # The essentials
     Key([mod, alt], "c", lazy.spawn(code_editor), desc="Launch code editor"),
+    Key([mod, alt], "b", lazy.spawn(default_browser), desc="Launch default browser"),
     # Switch between windows
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
@@ -101,7 +117,7 @@ keys = [
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-    Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
+    Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
     Key(
         [mod],
         "f",
@@ -117,6 +133,14 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
+
+    # Switch focus of monitors
+    Key([mod], "period", lazy.screen.next_group(), desc='Move focus to next monitor'),
+    Key([mod], "comma", lazy.screen.prev_group(), desc='Move focus to prev monitor'),
+
+    # backlight controls
+    # Key([], "XF86MonBrightnessUp", lazy.spawn("brightness up")),
+    # Key([], "XF86MonBrightnessDown", lazy.spawn("brightness down")),
 ]
 
 groups = [Group(i) for i in "123456789"]
@@ -152,7 +176,7 @@ for i in groups:
 layout_theme = {
     "border_width": 3,
     "margin": 15,
-    "border_focus": colors.get("color06", "#ff0000"),
+    "border_focus": colors.get("color03", "#ff0000"),
     "border_normal": colors.get("bg", "#1D2330"),
 }
 
@@ -193,8 +217,8 @@ screens = [
                     },
                     name_transform=lambda name: name.upper(),
                 ),
-                widget.TextBox("default config", name="default"),
-                widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
+                # widget.TextBox("default config", name="default"),
+                # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
                 # widget.StatusNotifier(),
                 widget.Systray(),
@@ -254,6 +278,11 @@ auto_minimize = True
 
 # When using the Wayland backend, this can be used to configure input devices.
 wl_input_rules = None
+
+@hook.subscribe.startup_once
+def start_once():
+    home = os.path.expanduser('~')
+    subprocess.call([home + '/.config/qtile/scripts/autostart.sh'])
 
 # XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
 # string besides java UI toolkits; you can see several discussions on the

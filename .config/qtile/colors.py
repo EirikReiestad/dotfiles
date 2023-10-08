@@ -12,6 +12,7 @@ DoomOne = [
     ["#da8548", "#da8548"], # color04
     ["#51afef", "#51afef"], # color05
     ["#c678dd", "#c678dd"], # color06 ["#46d9ff", "#46d9ff"]  # color15 ]
+]
 
 Dracula  = [
     ["#282a36", "#282a36"], # bg
