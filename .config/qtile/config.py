@@ -10,29 +10,19 @@ from libqtile.widget import backlight
 # ===== COLORS ===== #
 ######################
 
-DoomOne = {
-    "bg": "#282c34",
-    "fg": "#bbc2cf",
-    "color01": "#1c1f24",
-    "color02": "#ff6c6b",
-    "color03": "#98be65",
-    "color04": "#da8548",
-    "color05": "#51afef",
-    "color06": "#c678dd",
+Nord = {
+    "bg": "#2E3440",
+    "fg": "#D8DEE9",
+    "black": "#3B4252",
+    "red": "#BF616A",
+    "green": "#A3BE8C",
+    "yellow": "#EBCB8B",
+    "blue": "#81A1C1",
+    "magenta": "#B48EAD",
+    "cyan": "#88C0D0",
+    "white": "#E5E9F0",
 }
-
-CUSTOM = {
-    "bg": "#282c34",
-    "fg": "#bbc2cf",
-    "color01": "#1c1f24",
-    "color02": "#ff6c6b",
-    "color03": "#98be65",
-    "color04": "#da8548",
-    "color05": "#51afef",
-    "color06": "#c678dd",
-}
-
-colors = CUSTOM
+colors = Nord
 
 #########################
 # ===== CONSTANTS ===== #
@@ -57,17 +47,20 @@ wm_bar = "polybar"
 # A list of available commands that can be bound to keys can be found
 # at https://docs.qtile.org/en/latest/manual/config/lazy.html
 keys = [
+    # ----------------------------------------
     # The essentials
+    # ----------------------------------------
+    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod, alt], "c", lazy.spawn(code_editor), desc="Launch code editor"),
     Key([mod, alt], "b", lazy.spawn(default_browser), desc="Launch default browser"),
-    # Switch between windows
+    # ----------------------------------------
+    # Window controls
+    # ----------------------------------------
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
     Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
-    # Move windows between left/right columns or move up/down in current stack.
-    # Moving out of range in Columns layout will create new column.
     Key(
         [mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"
     ),
@@ -79,8 +72,6 @@ keys = [
     ),
     Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
-    # Grow windows. If current window is on the edge of screen and direction
-    # will be to screen edge - window would shrink.
     Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
     Key(
         [mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"
@@ -98,7 +89,6 @@ keys = [
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
-    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
@@ -114,15 +104,24 @@ keys = [
         lazy.window.toggle_floating(),
         desc="Toggle floating on the focused window",
     ),
+    # ----------------------------------------
+    # Qtile controls
+    # ----------------------------------------
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
-    # Switch focus of monitors
+    Key(
+        [mod], "r", lazy.spawn("./.dotfiles/scripts/applauncher.sh"), desc="Launch Rofi"
+    ),
+    # ----------------------------------------
+    # Monitor controls
+    # ----------------------------------------
     Key([mod], "period", lazy.screen.next_group(), desc="Move focus to next monitor"),
     Key([mod], "comma", lazy.screen.prev_group(), desc="Move focus to prev monitor"),
-    # backlight controls
-    # Key([], "XF86MonBrightnessUp", lazy.spawn("brightness up")),
-    # Key([], "XF86MonBrightnessDown", lazy.spawn("brightness down")),
+    # ----------------------------------------
+    # Other controls
+    # ----------------------------------------
+    Key([], "XF86MonBrightnessUp", lazy.spawn()),
+    Key([], "XF86MonBrightnessDown", lazy.spawn("brightness down")),
 ]
 
 groups = [Group(i) for i in "123456789"]
@@ -157,13 +156,13 @@ for i in groups:
 
 layout_theme = {
     "border_width": 3,
-    "margin": 15,
-    "border_focus": colors.get("color03", "#ff0000"),
+    "margin": 10,
+    "border_focus": colors.get("green", "#ff0000"),
     "border_normal": colors.get("bg", "#1D2330"),
 }
 
 layouts = [
-    # layout.Columns(border_focus_stack=["#d75f5f", "#8f3d3d"], border_width=4),
+    layout.Columns(**layout_theme),
     # layout.Max(),
     # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),

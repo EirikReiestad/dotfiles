@@ -569,7 +569,7 @@ schemes:
 # *SolarizedDark
 # *TomorrowNight
 
-colors: *DoomOne
+colors: *Nord
 
 
 # Visual Bell
