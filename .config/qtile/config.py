@@ -122,6 +122,16 @@ keys = [
     # ----------------------------------------
     Key([], "XF86MonBrightnessUp", lazy.spawn()),
     Key([], "XF86MonBrightnessDown", lazy.spawn("brightness down")),
+    Key(
+        [mod, "shift"],
+        "space",
+        lazy.widget["keyboardlayout"].next_keyboard(),
+        desc="Move window focus to other window",
+    ),
+    # ----------------------------------------
+    # Lock
+    # ----------------------------------------
+    # Key([mod, "space"], "l", lazy.spawn("qtile-cmd lock"), desc="Lock screen"),
 ]
 
 groups = [Group(i) for i in "123456789"]
@@ -157,18 +167,18 @@ for i in groups:
 layout_theme = {
     "border_width": 3,
     "margin": 10,
-    "border_focus": colors.get("green", "#ff0000"),
+    "border_focus": colors.get("blue", "#ff0000"),
     "border_normal": colors.get("bg", "#1D2330"),
 }
 
 layouts = [
+    layout.MonadTall(**layout_theme),
     layout.Columns(**layout_theme),
     # layout.Max(),
     # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),
     # layout.Bsp(),
     # layout.Matrix(),
-    layout.MonadTall(**layout_theme),
     # layout.MonadWide(),
     # layout.RatioTile(),
     # layout.Tile(),
