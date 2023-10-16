@@ -117,3 +117,5 @@ alias config='/usr/bin/git --git-dir=/home/eirik/.cfg/ --work-tree=/home/eirik'
 
 # Created by `pipx` on 2023-10-03 09:59:46
 export PATH="$PATH:/home/eirik/.local/bin"
+
+# export VIM=/usr/share/nvim

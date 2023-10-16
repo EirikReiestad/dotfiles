@@ -1,1 +1,2 @@
-print("hello")
+require("config")
+print("Hello World!")
