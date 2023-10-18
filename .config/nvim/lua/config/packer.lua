@@ -1,5 +1,4 @@
--- This file can be loaded by calling `lua require('plugins')` from your init.vim
-packer
+-- Thi file can be loaded by calling `lua require('plugins')` from your init.vim packer
 -- Only required if you have packer configured as `opt`
 vim.cmd [[packadd packer.nvim]]
 
@@ -20,4 +19,13 @@ return require('packer').startup(function(use)
 	-- Treesitter
 	use('nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'})
 	use('nvim-treesitter/playground')
+
+	-- Harpoon
+	use('theprimeagen/harpoon')
+
+	-- Undotree
+	use('mbbill/undotree')
+
+	-- Vim-fugitive
+	use('tpope/vim-fugitive')
 end)
