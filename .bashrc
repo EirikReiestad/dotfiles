@@ -119,3 +119,4 @@ alias config='/usr/bin/git --git-dir=/home/eirik/.cfg/ --work-tree=/home/eirik'
 export PATH="$PATH:/home/eirik/.local/bin"
 
 # export VIM=/usr/share/nvim
+. "$HOME/.cargo/env"
