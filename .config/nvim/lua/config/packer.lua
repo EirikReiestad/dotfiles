@@ -12,9 +12,26 @@ return require('packer').startup(function(use)
 	use 'shaunsingh/nord.nvim'
 	use({'rose-pine/neovim', as = 'rose-pine'})
 
+    -- Trouble
+    use({
+        "folke/trouble.nvim",
+        config = function()
+            require("trouble").setup {
+                icons = false,
+                -- your configuration comes here
+                -- or leave it empty to use the default settings
+                -- refer to the configuration section below
+            }
+        end
+    })
+
 	-- Treesitter
 	use('nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'})
 	use('nvim-treesitter/playground')
+
+
+	-- Treesitter context
+    use("nvim-treesitter/nvim-treesitter-context");
 
 	-- Harpoon
 	use('theprimeagen/harpoon')
@@ -30,21 +47,24 @@ return require('packer').startup(function(use)
 		'VonHeikemen/lsp-zero.nvim',
 		branch = 'v3.x',
 		requires = {
-			--- Uncomment these if you want to manage LSP servers from neovim
-			-- {'williamboman/mason.nvim'},
-			-- {'williamboman/mason-lspconfig.nvim'},
-
 			-- LSP Support
 			{'neovim/nvim-lspconfig'},
+			{'williamboman/mason.nvim'},
+			{'williamboman/mason-lspconfig.nvim'},
 			-- Autocompletion
-			{'hrsh7th/nvim-cmp'},
-			{'hrsh7th/cmp-nvim-lsp'},
-			{'L3MON4D3/LuaSnip'},
+            {'hrsh7th/nvim-cmp'},
+            {'hrsh7th/cmp-buffer'},
+            {'hrsh7th/cmp-path'},
+            {'saadparwaiz1/cmp_luasnip'},
+            {'hrsh7th/cmp-nvim-lsp'},
+            {'hrsh7th/cmp-nvim-lua'},
+
+            -- Snippets
+            {'L3MON4D3/LuaSnip'},
+		    {'rafamadriz/friendly-snippets'},
 		}
 	}
-	use {
-		"williamboman/mason.nvim",
-		"williamboman/mason-lspconfig.nvim",
-		"neovim/nvim-lspconfig",
-	}
+
+    -- Copilot
+    use("github/copilot.vim")
 end)
