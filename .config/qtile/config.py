@@ -30,7 +30,7 @@ colors = Nord
 
 mod = "mod4"
 alt = "mod1"
-terminal = guess_terminal()
+terminal = guess_terminal() + " -e tmux attach"
 code_editor = "code"
 default_browser = "microsoft-edge"
 
@@ -53,7 +53,7 @@ keys = [
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod, alt], "c", lazy.spawn(code_editor), desc="Launch code editor"),
     Key([mod, alt], "b", lazy.spawn(default_browser), desc="Launch default browser"),
-    # ----------------------------------------
+   # ----------------------------------------
     # Window controls
     # ----------------------------------------
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
