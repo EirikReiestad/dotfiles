@@ -110,7 +110,7 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key(
-        [mod], "r", lazy.spawn("./.dotfiles/scripts/applauncher.sh"), desc="Launch Rofi"
+        [mod], "r", lazy.spawn("./.scripts/applauncher.sh"), desc="Launch Rofi"
     ),
     # ----------------------------------------
     # Monitor controls
