@@ -1,6 +1,6 @@
 import os
 import subprocess
-from libqtile import bar, layout, widget, hook, qtile
+from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
@@ -30,7 +30,8 @@ colors = Nord
 
 mod = "mod4"
 alt = "mod1"
-terminal = guess_terminal() + " -e tmux attach"
+# terminal = guess_terminal() + " -e tmux attach"
+terminal = guess_terminal()
 code_editor = "code"
 default_browser = "microsoft-edge"
 
