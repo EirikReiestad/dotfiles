@@ -1,6 +1,6 @@
 import os
 import subprocess
-from libqtile import bar, layout, widget, hook, qtile
+from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
@@ -30,6 +30,7 @@ colors = Nord
 
 mod = "mod4"
 alt = "mod1"
+# terminal = guess_terminal() + " -e tmux attach"
 terminal = guess_terminal()
 code_editor = "code"
 default_browser = "microsoft-edge"
@@ -53,7 +54,7 @@ keys = [
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod, alt], "c", lazy.spawn(code_editor), desc="Launch code editor"),
     Key([mod, alt], "b", lazy.spawn(default_browser), desc="Launch default browser"),
-    # ----------------------------------------
+   # ----------------------------------------
     # Window controls
     # ----------------------------------------
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
@@ -110,7 +111,7 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key(
-        [mod], "r", lazy.spawn("./.dotfiles/scripts/applauncher.sh"), desc="Launch Rofi"
+        [mod], "r", lazy.spawn("./.scripts/applauncher.sh"), desc="Launch Rofi"
     ),
     # ----------------------------------------
     # Monitor controls
