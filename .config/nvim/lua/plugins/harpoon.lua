@@ -1,5 +1,7 @@
+-- TODO: Fix the keybindings
+
 return {
-  { "ThePrimeagen/harpoon" },
+  "ThePrimeagen/harpoon",
   branch = "harpoon2",
   requires = "nvim-lua/plenary.nvim",
 }
