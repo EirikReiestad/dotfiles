@@ -53,15 +53,17 @@ keys = [
     # ----------------------------------------
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod, alt], "c", lazy.spawn(code_editor), desc="Launch code editor"),
-    Key([mod, alt], "b", lazy.spawn(default_browser), desc="Launch default browser"),
-   # ----------------------------------------
+    Key([mod, alt], "b", lazy.spawn(default_browser),
+        desc="Launch default browser"),
+    # ----------------------------------------
     # Window controls
     # ----------------------------------------
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
-    Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
+    Key([mod], "space", lazy.layout.next(),
+        desc="Move window focus to other window"),
     Key(
         [mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"
     ),
@@ -73,7 +75,8 @@ keys = [
     ),
     Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
-    Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
+    Key([mod, "control"], "h", lazy.layout.grow_left(),
+        desc="Grow window to the left"),
     Key(
         [mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"
     ),
@@ -116,8 +119,10 @@ keys = [
     # ----------------------------------------
     # Monitor controls
     # ----------------------------------------
-    Key([mod], "period", lazy.screen.next_group(), desc="Move focus to next monitor"),
-    Key([mod], "comma", lazy.screen.prev_group(), desc="Move focus to prev monitor"),
+    Key([mod], "period", lazy.screen.next_group(),
+        desc="Move focus to next monitor"),
+    Key([mod], "comma", lazy.screen.prev_group(),
+        desc="Move focus to prev monitor"),
     # ----------------------------------------
     # Other controls
     # ----------------------------------------
@@ -152,7 +157,8 @@ for i in groups:
                 [mod, "shift"],
                 i.name,
                 lazy.window.togroup(i.name, switch_group=True),
-                desc="Switch to & move focused window to group {}".format(i.name),
+                desc="Switch to & move focused window to group {}".format(
+                    i.name),
             ),
             # Or, use below if you prefer not to switch to that group.
             # # mod1 + shift + letter of group = move focused window to group
