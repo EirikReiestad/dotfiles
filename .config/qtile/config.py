@@ -51,7 +51,10 @@ keys = [
     # ----------------------------------------
     # The essentials
     # ----------------------------------------
-    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    # Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    # Key([mod], "Return", lazy.spawn("$HOME/.config/qtile/scripts/tmux.sh"), desc="Launch terminal"),
+    Key([mod], "Return", lazy.spawn(os.path.expanduser("~") + \
+        "/.config/qtile/scripts/tmux.sh"), desc="Launch terminal"),
     Key([mod, alt], "c", lazy.spawn(code_editor), desc="Launch code editor"),
     Key([mod, alt], "b", lazy.spawn(default_browser),
         desc="Launch default browser"),
