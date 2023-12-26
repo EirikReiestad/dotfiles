@@ -41,6 +41,29 @@ default_browser = "microsoft-edge"
 wm_bar = "polybar"
 # wm_bar = "qtile"
 
+################################
+# ===== EXTERNAL MONTIOR ===== #
+################################
+
+
+def window_to_previous_screen(qtile, switch_group=False, switch_screen=False):
+    i = qtile.screens.index(qtile.current_screen)
+    if i != 0:
+        group = qtile.screens[i - 1].group.name
+        qtile.current_window.togroup(group, switch_group=switch_group)
+        if switch_screen is True:
+            qtile.cmd_to_screen(i - 1)
+
+
+def window_to_next_screen(qtile, switch_group=False, switch_screen=False):
+    i = qtile.screens.index(qtile.current_screen)
+    if i + 1 != len(qtile.screens):
+        group = qtile.screens[i + 1].group.name
+        qtile.current_window.togroup(group, switch_group=switch_group)
+        if switch_screen is True:
+            qtile.cmd_to_screen(i + 1)
+
+
 ####################
 # ===== KEYS ===== #
 ####################
@@ -126,11 +149,19 @@ keys = [
         desc="Move focus to next monitor"),
     Key([mod], "comma", lazy.screen.prev_group(),
         desc="Move focus to prev monitor"),
+    Key([mod, "control"], "period", lazy.function(
+        window_to_next_screen, switch_screen=True)),
+    Key([mod, "control"], "comma", lazy.function(
+        window_to_previous_screen, switch_screen=True)),
     # ----------------------------------------
     # Other controls
     # ----------------------------------------
-    Key([], "XF86MonBrightnessUp", lazy.spawn()),
-    Key([], "XF86MonBrightnessDown", lazy.spawn("brightness down")),
+    # Key([], "XF86MonBrightnessUp", lazy.spawn()),
+    # Key([], "XF86MonBrightnessDown", lazy.spawn("brightness down")),
+    Key([], "XF86MonBrightnessUp", lazy.widget['backlight'].change_backlight(
+        backlight.ChangeDirection.UP)),
+    Key([], "XF86MonBrightnessDown", lazy.widget['backlight'].change_backlight(
+        backlight.ChangeDirection.DOWN)),
     Key(
         [mod, "shift"],
         "space",
@@ -299,7 +330,7 @@ auto_minimize = True
 wl_input_rules = None
 
 
-@hook.subscribe.startup_once
+@ hook.subscribe.startup_once
 def start_once():
     home = os.path.expanduser("~")
     subprocess.call([home + "/.config/qtile/scripts/autostart.sh"])
