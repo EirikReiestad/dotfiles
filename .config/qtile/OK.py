@@ -1,6 +1,6 @@
 import os
 import subprocess
-from libqtile import bar, layout, widget, hook, qtile
+from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
@@ -30,6 +30,7 @@ colors = Nord
 
 mod = "mod4"
 alt = "mod1"
+# terminal = guess_terminal() + " -e tmux attach"
 terminal = guess_terminal()
 code_editor = "code"
 default_browser = "microsoft-edge"
@@ -39,6 +40,29 @@ default_browser = "microsoft-edge"
 # ----------------------------------------
 wm_bar = "polybar"
 # wm_bar = "qtile"
+
+################################
+# ===== EXTERNAL MONTIOR ===== #
+################################
+
+
+def window_to_previous_screen(qtile, switch_group=False, switch_screen=False):
+    i = qtile.screens.index(qtile.current_screen)
+    if i != 0:
+        group = qtile.screens[i - 1].group.name
+        qtile.current_window.togroup(group, switch_group=switch_group)
+        if switch_screen is True:
+            qtile.cmd_to_screen(i - 1)
+
+
+def window_to_next_screen(qtile, switch_group=False, switch_screen=False):
+    i = qtile.screens.index(qtile.current_screen)
+    if i + 1 != len(qtile.screens):
+        group = qtile.screens[i + 1].group.name
+        qtile.current_window.togroup(group, switch_group=switch_group)
+        if switch_screen is True:
+            qtile.cmd_to_screen(i + 1)
+
 
 ####################
 # ===== KEYS ===== #
@@ -50,9 +74,13 @@ keys = [
     # ----------------------------------------
     # The essentials
     # ----------------------------------------
-    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    # Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    # Key([mod], "Return", lazy.spawn("$HOME/.config/qtile/scripts/tmux.sh"), desc="Launch terminal"),
+    Key([mod], "Return", lazy.spawn(os.path.expanduser("~") + \
+        "/.config/qtile/scripts/tmux.sh"), desc="Launch terminal"),
     Key([mod, alt], "c", lazy.spawn(code_editor), desc="Launch code editor"),
-    Key([mod, alt], "b", lazy.spawn(default_browser), desc="Launch default browser"),
+    Key([mod, alt], "b", lazy.spawn(default_browser),
+        desc="Launch default browser"),
     # ----------------------------------------
     # Window controls
     # ----------------------------------------
@@ -60,7 +88,8 @@ keys = [
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
-    # Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
+    Key([mod], "space", lazy.layout.next(),
+        desc="Move window focus to other window"),
     Key(
         [mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"
     ),
@@ -72,7 +101,8 @@ keys = [
     ),
     Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
-    Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
+    Key([mod, "control"], "h", lazy.layout.grow_left(),
+        desc="Grow window to the left"),
     Key(
         [mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"
     ),
@@ -110,20 +140,30 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key(
-        [mod], "r", lazy.spawn("./.dotfiles/scripts/applauncher.sh"), desc="Launch Rofi"
+        [mod], "r", lazy.spawn("./.scripts/applauncher.sh"), desc="Launch Rofi"
     ),
     # ----------------------------------------
     # Monitor controls
     # ----------------------------------------
-    Key([mod], "period", lazy.screen.next_group(), desc="Move focus to next monitor"),
-    Key([mod], "comma", lazy.screen.prev_group(), desc="Move focus to prev monitor"),
+    Key([mod], "period", lazy.screen.next_group(),
+        desc="Move focus to next monitor"),
+    Key([mod], "comma", lazy.screen.prev_group(),
+        desc="Move focus to prev monitor"),
+    Key([mod, "control"], "period", lazy.function(
+        window_to_next_screen, switch_screen=True)),
+    Key([mod, "control"], "comma", lazy.function(
+        window_to_previous_screen, switch_screen=True)),
     # ----------------------------------------
     # Other controls
     # ----------------------------------------
-    Key([], "XF86MonBrightnessUp", lazy.spawn()),
-    Key([], "XF86MonBrightnessDown", lazy.spawn("brightness down")),
+    # Key([], "XF86MonBrightnessUp", lazy.spawn()),
+    # Key([], "XF86MonBrightnessDown", lazy.spawn("brightness down")),
+    Key([], "XF86MonBrightnessUp", lazy.widget['backlight'].change_backlight(
+        backlight.ChangeDirection.UP)),
+    Key([], "XF86MonBrightnessDown", lazy.widget['backlight'].change_backlight(
+        backlight.ChangeDirection.DOWN)),
     Key(
-        [mod],
+        [mod, "shift"],
         "space",
         lazy.widget["keyboardlayout"].next_keyboard(),
         desc="Move window focus to other window",
@@ -131,7 +171,7 @@ keys = [
     # ----------------------------------------
     # Lock
     # ----------------------------------------
-    Key([mod, "shift"], "l", lazy.spawn("qtile-cmd lock"), desc="Lock screen"),
+    # Key([mod, "space"], "l", lazy.spawn("qtile-cmd lock"), desc="Lock screen"),
 ]
 
 groups = [Group(i) for i in "123456789"]
@@ -151,7 +191,8 @@ for i in groups:
                 [mod, "shift"],
                 i.name,
                 lazy.window.togroup(i.name, switch_group=True),
-                desc="Switch to & move focused window to group {}".format(i.name),
+                desc="Switch to & move focused window to group {}".format(
+                    i.name),
             ),
             # Or, use below if you prefer not to switch to that group.
             # # mod1 + shift + letter of group = move focused window to group
@@ -172,13 +213,13 @@ layout_theme = {
 }
 
 layouts = [
+    layout.MonadTall(**layout_theme),
     layout.Columns(**layout_theme),
     # layout.Max(),
     # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),
     # layout.Bsp(),
     # layout.Matrix(),
-    layout.MonadTall(**layout_theme),
     # layout.MonadWide(),
     # layout.RatioTile(),
     # layout.Tile(),
@@ -289,7 +330,7 @@ auto_minimize = True
 wl_input_rules = None
 
 
-@hook.subscribe.startup_once
+@ hook.subscribe.startup_once
 def start_once():
     home = os.path.expanduser("~")
     subprocess.call([home + "/.config/qtile/scripts/autostart.sh"])
