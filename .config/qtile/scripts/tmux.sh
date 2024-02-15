@@ -9,42 +9,66 @@ tmux has-session -t config 2>/dev/null
 
 if [ $? -ne 0 ]; then
 	# Start new session
-	tmux new-session -d -s config
+	tmux new-session -d -s config -n 'qtile'
+	tmux send-keys -t config:0 'cd $HOME/.config/qtile; clear; exec $SHELL' C-m
 
-	# Create windows
-	# tmux new-window -t config:1 -n 'qtile' -c '$HOME/.config/qtile' # Did not work with multiple
-	tmux new-window -t config:1 -n 'qtile'
-	tmux send-keys -t config:1 'cd $HOME/.config/qtile; clear; exec $SHELL' C-m
+	# Create other windows
+	tmux new-window -t config:1 -n 'nvim'
+	tmux send-keys -t config:1 'cd $HOME/.config/nvim; clear; exec $SHELL' C-m
 
-	tmux new-window -t config:2 -n 'nvim'
-	tmux send-keys -t config:2 'cd $HOME/.config/nvim; clear; exec $SHELL' C-m
+	tmux new-window -t config:2 -n 'tmux'
+	tmux send-keys -t config:2 'cd $HOME/.config/tmux; clear; exec $SHELL' C-m
 
-	tmux new-window -t config:3 -n 'tmux'
-	tmux send-keys -t config:3 'cd $HOME/.config/tmux; clear; exec $SHELL' C-m
-
-	tmux select-window -t config:1
+	tmux select-window -t config:0
 fi
 
 # Create project session
-tmux has-session -t project 2>/dev/null
+tmux has-session -t project0 2>/dev/null
 
 if [ $? -ne 0 ]; then
-	tmux new-session -d -s project
+	tmux new-session -d -s project0 -n 'main'
+	tmux send-keys -t project0:0 'cd $HOME/Documents/university/IT3105/project2; clear; exec $SHELL' C-m
 
-	tmux new-winoow -t project:1 -n 'main'
-	tmux send-keys -t project:1 -n 'cd $HOME/Documents; clear; exec $SHELL' C-m
+	tmux new-window -t project0:1 -n 'bash'
+	tmux send-keys -t project0:1 'cd $HOME/Documents/university/IT3105/project2; clear; exec $SHELL' C-m
 
-	tmux select-winoow -t project:1
+	tmux select-window -t project0:0
+fi
+
+# Create project session
+tmux has-session -t project1 2>/dev/null
+
+if [ $? -ne 0 ]; then
+	tmux new-session -d -s project1 -n 'main'
+	tmux send-keys -t project1:0 'cd $HOME/Documents/university/MOL3022; clear; exec $SHELL' C-m
+
+	tmux new-window -t project1:1 -n 'bash'
+	tmux send-keys -t project1:1 'cd $HOME/Documents/university/MOL3022; clear; exec $SHELL' C-m
+
+	tmux select-window -t project1:0
+fi
+
+# Create project session
+tmux has-session -t Nordlys 2>/dev/null
+
+if [ $? -ne 0 ]; then
+	tmux new-session -d -s nordlys -n 'main'
+	tmux send-keys -t nordlys:0 'cd $HOME/Documents/projects/Nordlys/strategy; clear; exec $SHELL' C-m
+
+	tmux new-window -t nordlys:1 -n 'bash'
+	tmux send-keys -t nordlys:1 'cd $HOME/Documents/projects/Nordlys/strategy; clear; exec $SHELL' C-m
+
+	tmux select-window -t nordlys:0
 fi
 
 # Create other session
 tmux has-session -t other 2>/dev/null
 
 if [ $? -ne 0 ]; then
-	tmux new-session -d -s other
-	tmux new-window -t other:1 -n 'main'
-	tmux select-window -t other:1
+	tmux new-session -d -s other -n 'main'
+
+	tmux select-window -t other:0
 fi
 
 tmux source-file $HOME/.config/tmux/.tmux.conf
-alacritty -e tmux attach -t project
+alacritty -e tmux attach -t project0
