@@ -23,6 +23,17 @@ if [ $? -ne 0 ]; then
 fi
 
 # Create a notes session
+tmux has-session -t academia 2>/dev/null
+
+if [ $? -ne 0 ]; then
+	# Start new session
+	tmux new-session -d -s academia -n 'academia'
+	tmux send-keys -t academia:0 'cd $HOME/.academia; clear; exec $SHELL' C-m
+
+	tmux select-window -t academia:0
+fi
+
+# Create a notes session
 tmux has-session -t notes 2>/dev/null
 
 if [ $? -ne 0 ]; then
