@@ -22,6 +22,17 @@ if [ $? -ne 0 ]; then
 	tmux select-window -t config:0
 fi
 
+# Create a notes session
+tmux has-session -t notes 2>/dev/null
+
+if [ $? -ne 0 ]; then
+	# Start new session
+	tmux new-session -d -s notes -n 'main'
+	tmux send-keys -t notes:0 'cd $HOME/.notes; clear; exec $SHELL' C-m
+
+	tmux select-window -t notes:0
+fi
+
 # Create project session
 tmux has-session -t project0 2>/dev/null
 
