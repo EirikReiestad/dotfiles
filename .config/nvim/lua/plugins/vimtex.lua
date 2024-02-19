@@ -9,6 +9,7 @@ return {
         pattern = { "bib", "tex" },
         callback = function()
           vim.wo.conceallevel = 2
+          vim.wo.wrap = true -- enable text wrapping
         end,
       })
 
