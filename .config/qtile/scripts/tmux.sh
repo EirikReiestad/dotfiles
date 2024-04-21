@@ -30,6 +30,9 @@ if [ $? -ne 0 ]; then
 	tmux new-session -d -s academia -n 'main'
 	tmux send-keys -t academia:0 'cd $HOME/.academia; clear; exec $SHELL' C-m
 
+	tmux new-window -t academia:1 -n 'bash'
+	tmux send-keys -t academia:1 'cd $HOME/.academia; clear; exec $SHELL' C-m
+
 	tmux select-window -t academia:0
 fi
 
@@ -41,6 +44,9 @@ if [ $? -ne 0 ]; then
 	tmux new-session -d -s notes -n 'main'
 	tmux send-keys -t notes:0 'cd $HOME/.notes; clear; exec $SHELL' C-m
 
+	tmux new-window -t notes:1 -n 'bash'
+	tmux send-keys -t notes:1 'cd $HOME/.notes; clear; exec $SHELL' C-m
+
 	tmux select-window -t notes:0
 fi
 
@@ -49,25 +55,12 @@ tmux has-session -t project0 2>/dev/null
 
 if [ $? -ne 0 ]; then
 	tmux new-session -d -s project0 -n 'main'
-	tmux send-keys -t project0:0 'cd $HOME/Documents/university/IT3105/project2; clear; exec $SHELL' C-m
+	tmux send-keys -t project0:0 'cd $HOME/Documents/projects/XAI/; clear; exec $SHELL' C-m
 
 	tmux new-window -t project0:1 -n 'bash'
-	tmux send-keys -t project0:1 'cd $HOME/Documents/university/IT3105/project2; clear; exec $SHELL' C-m
+	tmux send-keys -t project0:1 'cd $HOME/Documents/projects/XAI/; clear; exec $SHELL' C-m
 
 	tmux select-window -t project0:0
-fi
-
-# Create project session
-tmux has-session -t project1 2>/dev/null
-
-if [ $? -ne 0 ]; then
-	tmux new-session -d -s project1 -n 'main'
-	tmux send-keys -t project1:0 'cd $HOME/Documents/university/MOL3022; clear; exec $SHELL' C-m
-
-	tmux new-window -t project1:1 -n 'bash'
-	tmux send-keys -t project1:1 'cd $HOME/Documents/university/MOL3022; clear; exec $SHELL' C-m
-
-	tmux select-window -t project1:0
 fi
 
 # Create project session

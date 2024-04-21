@@ -33,7 +33,7 @@ alt = "mod1"
 # terminal = guess_terminal() + " -e tmux attach"
 terminal = guess_terminal()
 code_editor = "code"
-default_browser = "microsoft-edge"
+default_browser = "thorium-browser"
 
 # ----------------------------------------
 # Define bar
