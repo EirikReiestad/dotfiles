@@ -63,19 +63,6 @@ if [ $? -ne 0 ]; then
 	tmux select-window -t project0:0
 fi
 
-# Create project session
-tmux has-session -t Nordlys 2>/dev/null
-
-if [ $? -ne 0 ]; then
-	tmux new-session -d -s nordlys -n 'main'
-	tmux send-keys -t nordlys:0 'cd $HOME/Documents/projects/Nordlys/strategy; clear; exec $SHELL' C-m
-
-	tmux new-window -t nordlys:1 -n 'bash'
-	tmux send-keys -t nordlys:1 'cd $HOME/Documents/projects/Nordlys/strategy; clear; exec $SHELL' C-m
-
-	tmux select-window -t nordlys:0
-fi
-
 # Create other session
 tmux has-session -t other 2>/dev/null
 
