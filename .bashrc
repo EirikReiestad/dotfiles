@@ -120,3 +120,11 @@ export PATH="$PATH:/home/eirik/.local/bin"
 
 # export VIM=/usr/share/nvim
 . "$HOME/.cargo/env"
+export PATH=$PATH:/snap/bin
+export PATH=$PATH:/snap/bin
+export PATH=$PATH:/snap/bin
+export PATH=$PATH:/snap/bin
+export PATH=$PATH:/snap/bin
+export PATH=$PATH:/snap/bin
+export PATH=$PATH:/snap/bin
+export PATH=$PATH:/snap/bin
