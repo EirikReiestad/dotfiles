@@ -124,6 +124,3 @@ if [ -z "$TMUX" ]; then
   # Run the tmux setup script
   ~/.config/tmux/tmux.sh
 fi
-
-tmux source-file $HOME/.config/tmux/.tmux.conf
-alacritty -e tmux attach -t project0
