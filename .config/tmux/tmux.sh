@@ -20,6 +20,9 @@ if [ $? -ne 0 ]; then
   tmux new-window -t config:2 -n 'tmux'
   tmux send-keys -t config:2 'cd $HOME/.config/tmux; clear; exec $SHELL' C-m
 
+  tmux new-window -t config:3 -n 'alacritty'
+  tmux send-keys -t config:3 'cd $HOME/.config/alacritty; clear; exec $SHELL' C-m
+
   tmux select-window -t config:0
 fi
 
@@ -56,10 +59,10 @@ tmux has-session -t project0 2>/dev/null
 
 if [ $? -ne 0 ]; then
   tmux new-session -d -s project0 -n 'main'
-  tmux send-keys -t project0:0 'cd $HOME/Documents/projects/XAI/; clear; exec $SHELL' C-m
+  tmux send-keys -t project0:0 'cd $HOME/Projects/XAI/; clear; exec $SHELL' C-m
 
   tmux new-window -t project0:1 -n 'bash'
-  tmux send-keys -t project0:1 'cd $HOME/Documents/projects/XAI/; clear; exec $SHELL' C-m
+  tmux send-keys -t project0:1 'cd $HOME/Projects/XAI/; clear; exec $SHELL' C-m
 
   tmux select-window -t project0:0
 fi
